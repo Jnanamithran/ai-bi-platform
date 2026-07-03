@@ -1,57 +1,99 @@
+import { motion, useInView } from 'framer-motion'
+import { useRef } from 'react'
+
+function FeatureCard({ icon, title, desc, index }) {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: '-100px' })
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      whileHover={{ scale: 1.03, borderColor: 'rgb(161 161 170)' }}
+      className="border border-zinc-900 rounded-2xl p-8 cursor-default transition-colors duration-300 group"
+    >
+      <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center mb-5 group-hover:border-zinc-600 transition-colors">
+        <span className="text-zinc-300 text-sm font-mono font-medium">{icon}</span>
+      </div>
+      <h3 className="text-white font-medium mb-2 text-base">{title}</h3>
+      <p className="text-zinc-500 text-sm leading-relaxed">{desc}</p>
+    </motion.div>
+  )
+}
+
 function Features() {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: '-100px' })
+
   const features = [
     {
-      icon: '⌘',
+      icon: 'NL',
       title: 'Natural Language Queries',
       desc: 'Ask questions the way you think — in plain English. No SQL knowledge required.',
     },
     {
-      icon: '🔒',
+      icon: 'RO',
       title: 'Read-Only & Secure',
       desc: 'Inquira never writes to your database. Every query is validated before execution.',
     },
     {
-      icon: '🏢',
+      icon: 'MT',
       title: 'Multi-Tenant Workspaces',
       desc: 'Each organization gets a fully isolated workspace with its own users and data.',
     },
     {
-      icon: '📊',
+      icon: 'BI',
       title: 'Charts & Dashboards',
       desc: 'Auto-generated visualizations from query results. Save and revisit anytime.',
     },
     {
-      icon: '🤖',
+      icon: 'AI',
       title: 'AI-Generated Summaries',
       desc: 'Every result comes with a plain-English explanation of what the data means.',
     },
     {
-      icon: '🔌',
+      icon: 'DB',
       title: 'Multi-Database Support',
       desc: 'Connect PostgreSQL, MySQL, MariaDB, or SQL Server — all from one platform.',
     },
   ]
 
   return (
-    <section id="features" className="py-24 px-6 border-t border-zinc-900">
-      <div className="max-w-4xl mx-auto">
-        <p className="text-xs text-zinc-500 uppercase tracking-widest mb-4 text-center">
+    <section id="features" className="py-32 px-6 border-t border-zinc-900">
+      <div className="max-w-5xl mx-auto">
+        <motion.p
+          ref={ref}
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5 }}
+          className="text-xs text-zinc-500 uppercase tracking-widest mb-4 text-center"
+        >
           Features
-        </p>
-        <h2 className="text-3xl md:text-4xl font-semibold text-center mb-16 tracking-tight">
-          Everything your team needs
-        </h2>
+        </motion.p>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          {features.map(({ icon, title, desc }) => (
-            <div
-              key={title}
-              className="border border-zinc-900 rounded-2xl p-6 hover:border-zinc-700 transition-colors"
-            >
-              <div className="text-2xl mb-4">{icon}</div>
-              <h3 className="text-white font-medium mb-2">{title}</h3>
-              <p className="text-zinc-500 text-sm leading-relaxed">{desc}</p>
-            </div>
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="text-4xl md:text-5xl font-semibold text-center mb-4 tracking-tight"
+        >
+          Everything your team needs
+        </motion.h2>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="text-zinc-500 text-center text-base mb-20 max-w-xl mx-auto leading-relaxed"
+        >
+          Built for non-technical users. Trusted by data teams.
+        </motion.p>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {features.map(({ icon, title, desc }, i) => (
+            <FeatureCard key={title} icon={icon} title={title} desc={desc} index={i} />
           ))}
         </div>
       </div>
