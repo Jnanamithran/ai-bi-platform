@@ -32,6 +32,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', require('./routes/auth.routes'))
 app.use('/api/organization', require('./routes/organization.routes'))
 app.use('/api/databases', require('./routes/database.routes'))
+app.use('/api/queries', require('./routes/query.routes'))
 
 // 404 handler
 app.use((req, res) => {
