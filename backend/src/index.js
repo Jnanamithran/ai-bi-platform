@@ -4,6 +4,13 @@ const helmet = require('helmet')
 const morgan = require('morgan')
 require('dotenv').config()
 
+const prisma = require('./config/prisma')
+
+// Test DB connection
+prisma.$connect()
+  .then(() => console.log('Database connected successfully'))
+  .catch((err) => console.error('Database connection failed:', err))
+
 const app = express()
 
 // Middleware
