@@ -12,7 +12,6 @@ function Login() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        {/* Logo */}
         <div className="text-center mb-8">
           <h1
             className="text-2xl font-semibold text-white tracking-tight cursor-pointer"
@@ -23,7 +22,6 @@ function Login() {
           <p className="text-zinc-600 mt-1 text-xs font-mono">Ask Better. Know Faster.</p>
         </div>
 
-        {/* Card */}
         <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-8">
           <h2 className="text-lg font-semibold text-white mb-1">Welcome back</h2>
           <p className="text-zinc-500 text-sm mb-6">Sign in to your organization workspace.</p>
@@ -50,7 +48,10 @@ function Login() {
               />
             </div>
 
-            <button className="w-full bg-white text-black font-medium py-2.5 rounded-lg text-sm hover:bg-zinc-200 transition-colors mt-2">
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="w-full bg-white text-black font-medium py-2.5 rounded-lg text-sm hover:bg-zinc-200 transition-colors mt-2"
+            >
               Sign In
             </button>
           </div>
@@ -66,9 +67,7 @@ function Login() {
           </p>
         </div>
 
-        <p className="text-center text-zinc-700 text-xs mt-6">
-          © 2025 Inquira. All rights reserved.
-        </p>
+        <p className="text-center text-zinc-700 text-xs mt-6">© 2025 Inquira. All rights reserved.</p>
       </motion.div>
     </div>
   )

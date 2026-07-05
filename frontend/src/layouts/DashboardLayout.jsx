@@ -18,48 +18,39 @@ function DashboardLayout() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
+    <div className="min-h-screen bg-black text-white flex flex-col overflow-x-hidden">
 
-      {/* Topbar */}
-      <header className="h-14 border-b border-zinc-900 flex items-center px-6 justify-between fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md">
+      <header className="h-14 border-b border-zinc-900 flex items-center px-4 justify-between fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md">
 
-        {/* Left — Logo */}
         <span
           className="text-white font-semibold text-lg tracking-tight cursor-pointer"
-          onClick={() => navigate('/dashboard')}
+          onClick={() => navigate('/query')}
         >
           Inquira
         </span>
 
-        {/* Center — Nav */}
         <nav className="hidden md:flex items-center gap-1">
-          <NavLink
-            to="/dashboard"
-            className={({ isActive }) =>
-              `px-4 py-1.5 rounded-lg text-sm transition-colors ${isActive ? 'bg-zinc-900 text-white' : 'text-zinc-500 hover:text-white hover:bg-zinc-900'}`
-            }
-          >
-            Dashboard
-          </NavLink>
-          <NavLink
-            to="/query"
-            className={({ isActive }) =>
-              `px-4 py-1.5 rounded-lg text-sm transition-colors ${isActive ? 'bg-zinc-900 text-white' : 'text-zinc-500 hover:text-white hover:bg-zinc-900'}`
-            }
-          >
-            Ask a Question
-          </NavLink>
-          <NavLink
-            to="/settings"
-            className={({ isActive }) =>
-              `px-4 py-1.5 rounded-lg text-sm transition-colors ${isActive ? 'bg-zinc-900 text-white' : 'text-zinc-500 hover:text-white hover:bg-zinc-900'}`
-            }
-          >
-            Settings
-          </NavLink>
+          {[
+            { to: '/query', label: 'Ask' },
+            { to: '/dashboard', label: 'Dashboard' },
+            { to: '/schema', label: 'Schema' },
+            { to: '/saved', label: 'Saved' },
+            { to: '/reports', label: 'Reports' },
+            { to: '/audit', label: 'Audit' },
+            { to: '/settings', label: 'Settings' },
+          ].map(({ to, label }) => (
+            <NavLink
+              key={to}
+              to={to}
+              className={({ isActive }) =>
+                `px-3 py-1.5 rounded-lg text-sm transition-colors ${isActive ? 'bg-zinc-900 text-white' : 'text-zinc-500 hover:text-white hover:bg-zinc-900'}`
+              }
+            >
+              {label}
+            </NavLink>
+          ))}
         </nav>
 
-        {/* Right — Org dropdown */}
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -85,19 +76,26 @@ function DashboardLayout() {
                   <p className="text-white text-sm font-medium">Jnanamithran</p>
                   <p className="text-zinc-500 text-xs">jnanamithranm@gmail.com</p>
                 </div>
-
                 <div className="py-1">
-                  <button className="w-full text-left px-4 py-2 text-sm text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors">
+                  <button
+                    onClick={() => { navigate('/settings'); setDropdownOpen(false) }}
+                    className="w-full text-left px-4 py-2 text-sm text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors"
+                  >
                     Organization settings
                   </button>
-                  <button className="w-full text-left px-4 py-2 text-sm text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors">
+                  <button
+                    onClick={() => { navigate('/settings'); setDropdownOpen(false) }}
+                    className="w-full text-left px-4 py-2 text-sm text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors"
+                  >
                     Invite members
                   </button>
-                  <button className="w-full text-left px-4 py-2 text-sm text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors">
-                    Switch organization
+                  <button
+                    onClick={() => { navigate('/connect'); setDropdownOpen(false) }}
+                    className="w-full text-left px-4 py-2 text-sm text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors"
+                  >
+                    Connect database
                   </button>
                 </div>
-
                 <div className="border-t border-zinc-800 py-1">
                   <button
                     onClick={() => navigate('/login')}
@@ -112,7 +110,6 @@ function DashboardLayout() {
         </div>
       </header>
 
-      {/* Page Content */}
       <main className="flex-1 pt-14 overflow-auto">
         <Outlet />
       </main>
