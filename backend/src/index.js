@@ -28,8 +28,8 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Inquira API is running' })
 })
 
-// Routes (we'll add these soon)
-// app.use('/api/auth', require('./routes/auth'))
+// Routes
+app.use('/api/auth', require('./routes/auth.routes'))
 
 // 404 handler
 app.use((req, res) => {
