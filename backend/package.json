@@ -23,7 +23,9 @@
     "helmet": "^8.2.0",
     "jsonwebtoken": "^9.0.3",
     "morgan": "^1.11.0",
-    "pg": "^8.22.0"
+    "mysql2": "^3.22.5",
+    "pg": "^8.22.0",
+    "tedious": "^20.0.0"
   },
   "devDependencies": {
     "@types/node": "^26.1.0",
