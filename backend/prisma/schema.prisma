@@ -1,0 +1,168 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Organization ───────────────────────────────────────────────────────────
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  website   String?
+  plan      Plan     @default(FREE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users       User[]
+  databases   DatabaseConnection[]
+  queries     Query[]
+  dashboards  Dashboard[]
+  auditLogs   AuditLog[]
+  roles       Role[]
+
+  @@map("organizations")
+}
+
+enum Plan {
+  FREE
+  PRO
+  ENTERPRISE
+}
+
+// ─── User ────────────────────────────────────────────────────────────────────
+
+model User {
+  id             String   @id @default(cuid())
+  name           String
+  email          String   @unique
+  password       String
+  role           UserRole @default(ANALYST)
+  organizationId String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  queries      Query[]
+  auditLogs    AuditLog[]
+
+  @@map("users")
+}
+
+enum UserRole {
+  OWNER
+  ADMIN
+  ANALYST
+  VIEWER
+}
+
+// ─── Role (custom roles) ─────────────────────────────────────────────────────
+
+model Role {
+  id             String   @id @default(cuid())
+  name           String
+  description    String?
+  permissions    String[]
+  organizationId String
+  isSystem       Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("roles")
+}
+
+// ─── Database Connection ─────────────────────────────────────────────────────
+
+model DatabaseConnection {
+  id             String   @id @default(cuid())
+  name           String
+  type           DbType
+  host           String
+  port           Int
+  dbname         String
+  username       String
+  password       String
+  organizationId String
+  isActive       Boolean  @default(true)
+  lastSync       DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  queries      Query[]
+
+  @@map("database_connections")
+}
+
+enum DbType {
+  POSTGRESQL
+  MYSQL
+  MARIADB
+  SQLSERVER
+}
+
+// ─── Query ───────────────────────────────────────────────────────────────────
+
+model Query {
+  id             String      @id @default(cuid())
+  question       String
+  sql            String?
+  result         Json?
+  summary        String?
+  status         QueryStatus @default(PENDING)
+  executionTime  Int?
+  rowCount       Int?
+  savedToDash    Boolean     @default(false)
+  organizationId String
+  userId         String
+  connectionId   String?
+  createdAt      DateTime    @default(now())
+
+  organization Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  connection   DatabaseConnection? @relation(fields: [connectionId], references: [id])
+
+  @@map("queries")
+}
+
+enum QueryStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+// ─── Dashboard ───────────────────────────────────────────────────────────────
+
+model Dashboard {
+  id             String   @id @default(cuid())
+  name           String
+  description    String?
+  isPinned       Boolean  @default(false)
+  organizationId String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("dashboards")
+}
+
+// ─── Audit Log ───────────────────────────────────────────────────────────────
+
+model AuditLog {
+  id             String   @id @default(cuid())
+  action         String
+  detail         String?
+  userId         String
+  organizationId String
+  createdAt      DateTime @default(now())
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("audit_logs")
+}
