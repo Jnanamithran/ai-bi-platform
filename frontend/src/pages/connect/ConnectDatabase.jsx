@@ -1,22 +1,24 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
+import { testConnection, createConnection } from '../../services/database.service'
 
 const DB_TYPES = [
-  { id: 'postgresql', name: 'PostgreSQL', desc: 'Most popular open-source database', defaultPort: '5432' },
-  { id: 'mysql', name: 'MySQL', desc: 'Widely used relational database', defaultPort: '3306' },
-  { id: 'mariadb', name: 'MariaDB', desc: 'MySQL-compatible open-source fork', defaultPort: '3306' },
-  { id: 'sqlserver', name: 'SQL Server', desc: 'Microsoft enterprise database', defaultPort: '1433' },
+  { id: 'POSTGRESQL', name: 'PostgreSQL', desc: 'Most popular open-source database', defaultPort: '5432' },
+  { id: 'MYSQL', name: 'MySQL', desc: 'Widely used relational database', defaultPort: '3306' },
+  { id: 'MARIADB', name: 'MariaDB', desc: 'MySQL-compatible open-source fork', defaultPort: '3306' },
+  { id: 'SQLSERVER', name: 'SQL Server', desc: 'Microsoft enterprise database', defaultPort: '1433' },
 ]
 
 function ConnectDatabase() {
   const navigate = useNavigate()
   const [step, setStep] = useState(1)
   const [selectedDb, setSelectedDb] = useState(null)
-  const [form, setForm] = useState({ host: '', port: '', dbname: '', username: '', password: '' })
+  const [form, setForm] = useState({ name: '', host: '', port: '', dbname: '', username: '', password: '' })
   const [testing, setTesting] = useState(false)
   const [testResult, setTestResult] = useState(null)
   const [connecting, setConnecting] = useState(false)
+  const [error, setError] = useState('')
 
   function handleSelectDb(db) {
     setSelectedDb(db)
@@ -24,21 +26,32 @@ function ConnectDatabase() {
     setStep(2)
   }
 
-  function handleTest() {
+  async function handleTest() {
     setTesting(true)
     setTestResult(null)
-    setTimeout(() => {
-      setTesting(false)
+    setError('')
+    try {
+      await testConnection({ ...form, type: selectedDb.id })
       setTestResult('success')
-    }, 1500)
+    } catch (err) {
+      setError(err.response?.data?.error || 'Connection failed')
+      setTestResult('failed')
+    } finally {
+      setTesting(false)
+    }
   }
 
-  function handleConnect() {
+  async function handleConnect() {
     setConnecting(true)
-    setTimeout(() => {
-      setConnecting(false)
+    setError('')
+    try {
+      await createConnection({ ...form, type: selectedDb.id })
       navigate('/dashboard')
-    }, 2000)
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to connect')
+    } finally {
+      setConnecting(false)
+    }
   }
 
   return (
@@ -78,7 +91,6 @@ function ConnectDatabase() {
         ))}
       </motion.div>
 
-      {/* Step 1 — Choose DB */}
       <AnimatePresence mode="wait">
         {step === 1 && (
           <motion.div
@@ -110,7 +122,6 @@ function ConnectDatabase() {
           </motion.div>
         )}
 
-        {/* Step 2 — Credentials */}
         {step === 2 && (
           <motion.div
             key="step2"
@@ -124,6 +135,12 @@ function ConnectDatabase() {
               <span className="text-sm text-zinc-400">Connecting to <span className="text-white">{selectedDb?.name}</span></span>
             </div>
 
+            {error && (
+              <div className="bg-red-950 border border-red-900 text-red-400 text-xs px-4 py-2.5 rounded-lg mb-4">
+                {error}
+              </div>
+            )}
+
             <div className="border border-zinc-900 rounded-2xl overflow-hidden">
               <div className="px-6 py-4 border-b border-zinc-900">
                 <h2 className="text-sm font-medium text-white">Connection Details</h2>
@@ -131,8 +148,19 @@ function ConnectDatabase() {
               </div>
 
               <div className="px-6 py-5 space-y-4">
+                <div>
+                  <label className="block text-xs text-zinc-400 mb-1.5">Connection Name</label>
+                  <input
+                    type="text"
+                    value={form.name}
+                    onChange={e => setForm({ ...form, name: e.target.value })}
+                    placeholder="e.g. production-db"
+                    className="w-full bg-black border border-zinc-800 text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-zinc-600 transition-colors placeholder:text-zinc-700"
+                  />
+                </div>
+
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="col-span-2 sm:col-span-1">
+                  <div>
                     <label className="block text-xs text-zinc-400 mb-1.5">Host</label>
                     <input
                       type="text"
@@ -142,7 +170,7 @@ function ConnectDatabase() {
                       className="w-full bg-black border border-zinc-800 text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-zinc-600 transition-colors placeholder:text-zinc-700"
                     />
                   </div>
-                  <div className="col-span-2 sm:col-span-1">
+                  <div>
                     <label className="block text-xs text-zinc-400 mb-1.5">Port</label>
                     <input
                       type="text"
@@ -186,7 +214,7 @@ function ConnectDatabase() {
                   />
                 </div>
 
-                <div className="pt-2 flex items-center gap-3">
+                <div className="pt-2 flex items-center gap-3 flex-wrap">
                   <button
                     onClick={handleTest}
                     disabled={testing}
@@ -204,6 +232,10 @@ function ConnectDatabase() {
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"></span>
                       Connection successful
                     </motion.span>
+                  )}
+
+                  {testResult === 'failed' && (
+                    <span className="text-xs text-red-400">Connection failed</span>
                   )}
                 </div>
 
@@ -223,7 +255,6 @@ function ConnectDatabase() {
           </motion.div>
         )}
       </AnimatePresence>
-
     </div>
   )
 }
