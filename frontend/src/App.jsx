@@ -13,18 +13,21 @@ import Reports from './pages/reports/Reports'
 import AuditLogs from './pages/audit/AuditLogs'
 import ConnectDatabase from './pages/connect/ConnectDatabase'
 import Onboarding from './pages/onboarding/Onboarding'
+import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
   return (
     <Routes>
-      {/* Public */}
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/onboarding" element={<Onboarding />} />
 
-      {/* App */}
-      <Route element={<DashboardLayout />}>
+      <Route element={
+        <ProtectedRoute>
+          <DashboardLayout />
+        </ProtectedRoute>
+      }>
         <Route path="/query" element={<QueryPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/settings" element={<Settings />} />

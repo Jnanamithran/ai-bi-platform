@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useAuth } from '../store/AuthContext'
 
 function DashboardLayout() {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef(null)
   const navigate = useNavigate()
+  const { user, organization, logout } = useAuth()
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -57,9 +59,9 @@ function DashboardLayout() {
             className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-zinc-800 hover:border-zinc-600 transition-colors text-sm"
           >
             <div className="w-5 h-5 rounded-full bg-white flex items-center justify-center text-black text-xs font-bold">
-              J
+              {user?.name?.[0]?.toUpperCase() || 'U'}
             </div>
-            <span className="text-zinc-300 hidden sm:block">Acme Corp</span>
+            <span className="text-zinc-300 hidden sm:block">{organization?.name || 'Organization'}</span>
             <span className="text-zinc-600 text-xs">{dropdownOpen ? '▲' : '▼'}</span>
           </button>
 
@@ -73,21 +75,16 @@ function DashboardLayout() {
                 className="absolute right-0 mt-2 w-52 bg-zinc-950 border border-zinc-800 rounded-xl shadow-xl overflow-hidden"
               >
                 <div className="px-4 py-3 border-b border-zinc-800">
-                  <p className="text-white text-sm font-medium">Jnanamithran</p>
-                  <p className="text-zinc-500 text-xs">jnanamithranm@gmail.com</p>
+                  <p className="text-white text-sm font-medium">{user?.name}</p>
+                  <p className="text-zinc-500 text-xs">{user?.email}</p>
+                  <p className="text-zinc-600 text-xs mt-0.5">{user?.role}</p>
                 </div>
                 <div className="py-1">
                   <button
                     onClick={() => { navigate('/settings'); setDropdownOpen(false) }}
                     className="w-full text-left px-4 py-2 text-sm text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors"
                   >
-                    Organization settings
-                  </button>
-                  <button
-                    onClick={() => { navigate('/settings'); setDropdownOpen(false) }}
-                    className="w-full text-left px-4 py-2 text-sm text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors"
-                  >
-                    Invite members
+                    Settings
                   </button>
                   <button
                     onClick={() => { navigate('/connect'); setDropdownOpen(false) }}
@@ -98,7 +95,7 @@ function DashboardLayout() {
                 </div>
                 <div className="border-t border-zinc-800 py-1">
                   <button
-                    onClick={() => navigate('/login')}
+                    onClick={logout}
                     className="w-full text-left px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-zinc-900 transition-colors"
                   >
                     Log out

@@ -1,8 +1,35 @@
-﻿import { motion } from 'framer-motion'
+﻿import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../store/AuthContext'
 
 function Login() {
   const navigate = useNavigate()
+  const { login } = useAuth()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  async function handleLogin() {
+    if (!email || !password) {
+      setError('Please fill in all fields')
+      return
+    }
+    setLoading(true)
+    setError('')
+    try {
+      await login(email, password)
+    } catch (err) {
+      setError(err.response?.data?.error || 'Login failed')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  function handleKeyDown(e) {
+    if (e.key === 'Enter') handleLogin()
+  }
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4">
@@ -26,11 +53,20 @@ function Login() {
           <h2 className="text-lg font-semibold text-white mb-1">Welcome back</h2>
           <p className="text-zinc-500 text-sm mb-6">Sign in to your organization workspace.</p>
 
+          {error && (
+            <div className="bg-red-950 border border-red-900 text-red-400 text-xs px-4 py-2.5 rounded-lg mb-4">
+              {error}
+            </div>
+          )}
+
           <div className="space-y-4">
             <div>
               <label className="block text-xs text-zinc-400 mb-1.5">Email</label>
               <input
                 type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                onKeyDown={handleKeyDown}
                 placeholder="you@company.com"
                 className="w-full bg-black border border-zinc-800 text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-zinc-500 transition-colors placeholder:text-zinc-700"
               />
@@ -43,16 +79,20 @@ function Login() {
               </div>
               <input
                 type="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                onKeyDown={handleKeyDown}
                 placeholder="••••••••"
                 className="w-full bg-black border border-zinc-800 text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-zinc-500 transition-colors placeholder:text-zinc-700"
               />
             </div>
 
             <button
-              onClick={() => navigate('/dashboard')}
-              className="w-full bg-white text-black font-medium py-2.5 rounded-lg text-sm hover:bg-zinc-200 transition-colors mt-2"
+              onClick={handleLogin}
+              disabled={loading}
+              className="w-full bg-white text-black font-medium py-2.5 rounded-lg text-sm hover:bg-zinc-200 transition-colors mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Sign In
+              {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </div>
 

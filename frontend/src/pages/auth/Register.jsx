@@ -1,8 +1,38 @@
-﻿import { motion } from 'framer-motion'
+﻿import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../store/AuthContext'
 
 function Register() {
   const navigate = useNavigate()
+  const { register } = useAuth()
+  const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '', organizationName: '' })
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  async function handleRegister() {
+    if (!form.name || !form.email || !form.password || !form.organizationName) {
+      setError('Please fill in all fields')
+      return
+    }
+    if (form.password !== form.confirmPassword) {
+      setError('Passwords do not match')
+      return
+    }
+    if (form.password.length < 8) {
+      setError('Password must be at least 8 characters')
+      return
+    }
+    setLoading(true)
+    setError('')
+    try {
+      await register(form.name, form.email, form.password, form.organizationName)
+    } catch (err) {
+      setError(err.response?.data?.error || 'Registration failed')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4">
@@ -26,57 +56,38 @@ function Register() {
           <h2 className="text-lg font-semibold text-white mb-1">Create your account</h2>
           <p className="text-zinc-500 text-sm mb-6">Set up your organization workspace in seconds.</p>
 
+          {error && (
+            <div className="bg-red-950 border border-red-900 text-red-400 text-xs px-4 py-2.5 rounded-lg mb-4">
+              {error}
+            </div>
+          )}
+
           <div className="space-y-4">
-            <div>
-              <label className="block text-xs text-zinc-400 mb-1.5">Full Name</label>
-              <input
-                type="text"
-                placeholder="John Doe"
-                className="w-full bg-black border border-zinc-800 text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-zinc-500 transition-colors placeholder:text-zinc-700"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs text-zinc-400 mb-1.5">Organization Name</label>
-              <input
-                type="text"
-                placeholder="Acme Corp"
-                className="w-full bg-black border border-zinc-800 text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-zinc-500 transition-colors placeholder:text-zinc-700"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs text-zinc-400 mb-1.5">Email</label>
-              <input
-                type="email"
-                placeholder="you@company.com"
-                className="w-full bg-black border border-zinc-800 text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-zinc-500 transition-colors placeholder:text-zinc-700"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs text-zinc-400 mb-1.5">Password</label>
-              <input
-                type="password"
-                placeholder="••••••••"
-                className="w-full bg-black border border-zinc-800 text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-zinc-500 transition-colors placeholder:text-zinc-700"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs text-zinc-400 mb-1.5">Confirm Password</label>
-              <input
-                type="password"
-                placeholder="••••••••"
-                className="w-full bg-black border border-zinc-800 text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-zinc-500 transition-colors placeholder:text-zinc-700"
-              />
-            </div>
+            {[
+              { label: 'Full Name', key: 'name', type: 'text', placeholder: 'John Doe' },
+              { label: 'Organization Name', key: 'organizationName', type: 'text', placeholder: 'Acme Corp' },
+              { label: 'Email', key: 'email', type: 'email', placeholder: 'you@company.com' },
+              { label: 'Password', key: 'password', type: 'password', placeholder: '••••••••' },
+              { label: 'Confirm Password', key: 'confirmPassword', type: 'password', placeholder: '••••••••' },
+            ].map(({ label, key, type, placeholder }) => (
+              <div key={key}>
+                <label className="block text-xs text-zinc-400 mb-1.5">{label}</label>
+                <input
+                  type={type}
+                  value={form[key]}
+                  onChange={e => setForm({ ...form, [key]: e.target.value })}
+                  placeholder={placeholder}
+                  className="w-full bg-black border border-zinc-800 text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-zinc-500 transition-colors placeholder:text-zinc-700"
+                />
+              </div>
+            ))}
 
             <button
-              onClick={() => navigate('/onboarding')}
-              className="w-full bg-white text-black font-medium py-2.5 rounded-lg text-sm hover:bg-zinc-200 transition-colors mt-2"
+              onClick={handleRegister}
+              disabled={loading}
+              className="w-full bg-white text-black font-medium py-2.5 rounded-lg text-sm hover:bg-zinc-200 transition-colors mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Create Account
+              {loading ? 'Creating account...' : 'Create Account'}
             </button>
           </div>
 
