@@ -209,7 +209,7 @@ Get all connections. Protected.
       "dbname": "mydb",
       "username": "readonly",
       "isActive": true,
-      "lastSync": "2025-07-05T..."
+      "lastSync": "2026-07-05T..."
     }
   ]
 }
@@ -360,7 +360,7 @@ Get audit logs. Protected.
       "id": "cmr85...",
       "action": "Ran query",
       "detail": "Show top 5 products by revenue",
-      "createdAt": "2025-07-05T...",
+      "createdAt": "2026-07-05T...",
       "user": { "name": "John Doe", "email": "john@acme.com" }
     }
   ],

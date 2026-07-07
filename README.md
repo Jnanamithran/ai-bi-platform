@@ -215,4 +215,4 @@ LinkedIn: [jnanamithran](https://linkedin.com/in/jnanamithran)
 
 ---
 
-© 2025 Inquira. All rights reserved.
+© 2026 Inquira. All rights reserved.
