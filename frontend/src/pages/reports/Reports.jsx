@@ -2,11 +2,11 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 
 const MOCK_REPORTS = [
-  { id: 1, name: 'Revenue Report — June 2025', type: 'PDF', size: '1.2 MB', generatedAt: '2 hrs ago', query: 'Total revenue by product for June 2025' },
-  { id: 2, name: 'Top Customers — Q2 2025', type: 'XLSX', size: '840 KB', generatedAt: 'Yesterday', query: 'Top 10 customers by order value Q2' },
+  { id: 1, name: 'Revenue Report — June 2026', type: 'PDF', size: '1.2 MB', generatedAt: '2 hrs ago', query: 'Total revenue by product for June 2026' },
+  { id: 2, name: 'Top Customers — Q2 2026', type: 'XLSX', size: '840 KB', generatedAt: 'Yesterday', query: 'Top 10 customers by order value Q2' },
   { id: 3, name: 'Inventory Status', type: 'CSV', size: '320 KB', generatedAt: '2 days ago', query: 'Current inventory levels by warehouse' },
-  { id: 4, name: 'Sales Summary — May 2025', type: 'PDF', size: '2.1 MB', generatedAt: '5 days ago', query: 'Monthly sales summary with trends' },
-  { id: 5, name: 'New Users — June 2025', type: 'CSV', size: '180 KB', generatedAt: '1 week ago', query: 'New user signups by week for June' },
+  { id: 4, name: 'Sales Summary — May 2026', type: 'PDF', size: '2.1 MB', generatedAt: '5 days ago', query: 'Monthly sales summary with trends' },
+  { id: 5, name: 'New Users — June 2026', type: 'CSV', size: '180 KB', generatedAt: '1 week ago', query: 'New user signups by week for June' },
 ]
 
 const TYPE_COLORS = {

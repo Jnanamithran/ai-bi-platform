@@ -107,7 +107,7 @@ function Login() {
           </p>
         </div>
 
-        <p className="text-center text-zinc-700 text-xs mt-6">© 2025 Inquira. All rights reserved.</p>
+        <p className="text-center text-zinc-700 text-xs mt-6">© 2026 Inquira. All rights reserved.</p>
       </motion.div>
     </div>
   )

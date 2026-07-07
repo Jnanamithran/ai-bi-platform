@@ -58,7 +58,7 @@ function Footer() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="border-t border-zinc-900 pt-6 flex flex-col md:flex-row items-center justify-between gap-4"
         >
-          <p className="text-zinc-600 text-xs">© 2025 Inquira. All rights reserved.</p>
+          <p className="text-zinc-600 text-xs">© 2026 Inquira. All rights reserved.</p>
           <p className="text-zinc-600 text-xs">Built with ♥ in Kerala, India</p>
         </motion.div>
       </div>
