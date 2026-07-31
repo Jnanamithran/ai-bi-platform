@@ -1,9 +1,9 @@
-import Navbar from './Navbar'
-import Hero from './Hero'
-import HowItWorks from './HowItWorks'
-import Features from './Features'
-import Pricing from './Pricing'
-import Footer from './Footer'
+import Navbar from '../../components/landing/Navbar'
+import Hero from '../../components/landing/Hero'
+import HowItWorks from '../../components/landing/HowItWorks'
+import Features from '../../components/landing/Features'
+import WhoItsFor from '../../components/landing/WhoItsFor'
+import Footer from '../../components/landing/Footer'
 
 function Landing() {
   return (
@@ -12,7 +12,7 @@ function Landing() {
       <Hero />
       <HowItWorks />
       <Features />
-      <Pricing />
+      <WhoItsFor />
       <Footer />
     </div>
   )

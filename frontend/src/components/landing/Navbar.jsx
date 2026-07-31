@@ -17,9 +17,10 @@ function Navbar() {
         <span className="text-white font-semibold text-xl tracking-tight">Inquira</span>
 
         <div className="hidden md:flex items-center gap-8 text-sm text-zinc-400">
+          <a href="#why" className="hover:text-white transition-colors">Why Inquira</a>
           <a href="#how" className="hover:text-white transition-colors">How it works</a>
-          <a href="#features" className="hover:text-white transition-colors">Features</a>
-          <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
+          <a href="#who" className="hover:text-white transition-colors">Who it's for</a>
+          <a href="#deploy" className="hover:text-white transition-colors">Self-host</a>
         </div>
 
         <div className="hidden md:flex items-center gap-3">
@@ -53,9 +54,10 @@ function Navbar() {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden border-t border-zinc-900 bg-black px-6 py-4 space-y-4 text-sm text-zinc-400 overflow-hidden"
           >
+            <a href="#why" className="block hover:text-white">Why Inquira</a>
             <a href="#how" className="block hover:text-white">How it works</a>
-            <a href="#features" className="block hover:text-white">Features</a>
-            <a href="#pricing" className="block hover:text-white">Pricing</a>
+            <a href="#who" className="block hover:text-white">Who it's for</a>
+            <a href="#deploy" className="block hover:text-white">Self-host</a>
             <button onClick={() => navigate('/login')} className="block hover:text-white">Log in</button>
             <button onClick={() => navigate('/register')} className="block text-white font-medium">Get Started</button>
           </motion.div>
