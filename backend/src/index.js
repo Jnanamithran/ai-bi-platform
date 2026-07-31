@@ -6,11 +6,14 @@ require('dotenv').config()
 
 const prisma = require('./config/prisma')
 
-// Test DB connection
-prisma.$connect()
-  .then(() => console.log('Database connected successfully'))
-  .catch((err) => console.error('Database connection failed:', err))
-
+// Test DB connection when a database URL is configured
+if (process.env.DATABASE_URL) {
+  prisma.$connect()
+    .then(() => console.log('Database connected successfully'))
+    .catch((err) => console.error('Database connection failed:', err))
+} else {
+  console.warn('DATABASE_URL is not set; skipping Prisma connection check')
+}
 const app = express()
 
 // Middleware

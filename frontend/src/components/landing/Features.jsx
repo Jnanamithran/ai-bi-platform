@@ -29,34 +29,34 @@ function Features() {
 
   const features = [
     {
-      icon: 'NL',
-      title: 'Natural Language Queries',
-      desc: 'Ask questions the way you think — in plain English. No SQL knowledge required.',
+      icon: 'AI',
+      title: 'Local AI — No Cloud',
+      desc: 'Runs on Ollama with Llama 3.2 locally. Your questions and data never touch OpenAI, Google, or any external API.',
     },
     {
       icon: 'RO',
-      title: 'Read-Only & Secure',
-      desc: 'Inquira never writes to your database. Every query is validated before execution.',
+      title: 'Read-Only Queries',
+      desc: 'Every generated SQL is validated before execution. Only SELECT statements run — your data can never be modified.',
     },
     {
-      icon: 'MT',
-      title: 'Multi-Tenant Workspaces',
-      desc: 'Each organization gets a fully isolated workspace with its own users and data.',
-    },
-    {
-      icon: 'BI',
-      title: 'Charts & Dashboards',
-      desc: 'Auto-generated visualizations from query results. Save and revisit anytime.',
-    },
-    {
-      icon: 'AI',
-      title: 'AI-Generated Summaries',
-      desc: 'Every result comes with a plain-English explanation of what the data means.',
+      icon: 'NL',
+      title: 'Plain English Queries',
+      desc: 'No SQL knowledge needed. Anyone on your team can ask questions and get accurate answers instantly.',
     },
     {
       icon: 'DB',
       title: 'Multi-Database Support',
-      desc: 'Connect PostgreSQL, MySQL, MariaDB, or SQL Server — all from one platform.',
+      desc: 'Connect PostgreSQL, MySQL, MariaDB, or SQL Server. Works with your existing database — no migration needed.',
+    },
+    {
+      icon: 'AU',
+      title: 'Full Audit Trail',
+      desc: 'Every query, every user action is logged. Know exactly who asked what and when — essential for compliance.',
+    },
+    {
+      icon: 'OS',
+      title: 'Open Source',
+      desc: 'Fully open source and self-hostable. Inspect every line of code. No black boxes, no vendor lock-in.',
     },
   ]
 
@@ -79,7 +79,7 @@ function Features() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-4xl md:text-5xl font-semibold text-center mb-4 tracking-tight"
         >
-          Everything your team needs
+          Built for privacy-first organizations
         </motion.h2>
 
         <motion.p
@@ -88,7 +88,7 @@ function Features() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="text-zinc-500 text-center text-base mb-20 max-w-xl mx-auto leading-relaxed"
         >
-          Built for non-technical users. Trusted by data teams.
+          Every feature is designed with one principle — your data stays yours.
         </motion.p>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

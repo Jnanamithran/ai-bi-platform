@@ -28,18 +28,18 @@ function HowItWorks() {
   const steps = [
     {
       step: '01',
-      title: 'Connect your database',
-      desc: 'Securely connect PostgreSQL, MySQL, or any major relational database in under a minute. No migration needed — Inquira works with your existing setup.',
+      title: 'Deploy on your infrastructure',
+      desc: 'Install Inquira on your own server or private cloud. Your database credentials, your data, and your AI model all stay within your network. Nothing touches the internet.',
     },
     {
       step: '02',
-      title: 'Ask in plain English',
-      desc: 'Type your question naturally. Inquira reads your schema, understands the relationships between your tables, and generates precise, safe SQL automatically.',
+      title: 'Connect your database',
+      desc: 'Connect your PostgreSQL, MySQL, or SQL Server database. Inquira reads your schema and understands your tables — no data is copied or stored externally.',
     },
     {
       step: '03',
-      title: 'Get instant insights',
-      desc: 'Results appear as interactive tables, charts, and AI-generated summaries in seconds. Save them to dashboards or export them — ready to share with your team.',
+      title: 'Your team asks questions',
+      desc: 'Anyone on your team — doctors, lawyers, analysts, managers — can ask questions in plain English and get instant answers. No SQL. No training required.',
     },
   ]
 
@@ -62,7 +62,7 @@ function HowItWorks() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-4xl md:text-5xl font-semibold text-center mb-4 tracking-tight"
         >
-          Three steps to insights
+          Private by design
         </motion.h2>
 
         <motion.p
@@ -71,7 +71,7 @@ function HowItWorks() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="text-zinc-500 text-center text-base mb-20 max-w-xl mx-auto leading-relaxed"
         >
-          No technical setup. No SQL training. Just connect, ask, and know.
+          Every part of Inquira runs on your infrastructure. The AI, the database, the queries — all local.
         </motion.p>
 
         <div className="grid md:grid-cols-3 gap-6">

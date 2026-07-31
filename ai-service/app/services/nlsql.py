@@ -1,11 +1,8 @@
 ﻿import os
-from groq import Groq
 import re
-from dotenv import load_dotenv
 
-load_dotenv()
+import ollama
 
-client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 def build_schema_prompt(schema) -> str:
     lines = []
@@ -23,6 +20,7 @@ def build_schema_prompt(schema) -> str:
         lines.append("")
     return "\n".join(lines)
 
+
 def extract_sql(text: str) -> str:
     code_block = re.search(r"```sql\s*(.*?)\s*```", text, re.DOTALL | re.IGNORECASE)
     if code_block:
@@ -35,8 +33,10 @@ def extract_sql(text: str) -> str:
         return select_match.group(1).strip()
     return text.strip()
 
+
 async def generate_sql(question: str, schema: list) -> dict:
     schema_text = build_schema_prompt(schema)
+    model_name = os.getenv("MODEL_NAME", "llama3.2")
 
     prompt = f"""You are an expert SQL assistant. Convert the natural language question into an accurate SQL SELECT query.
 
@@ -44,42 +44,50 @@ DATABASE SCHEMA:
 {schema_text}
 
 RULES:
-1. Only generate SELECT queries
+1. Only generate SELECT queries — never INSERT, UPDATE, DELETE, DROP, or ALTER
 2. Use exact table and column names from the schema
-3. Use JOINs when needed
-4. Return ONLY the SQL inside ```sql ``` code blocks
-5. No explanations
+3. Use JOINs when data from multiple tables is needed
+4. Return ONLY the SQL query inside ```sql ``` code blocks
+5. No explanations — just the SQL
 
 USER QUESTION: {question}
 
 SQL QUERY:"""
 
-    sql_response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=[
-            {"role": "system", "content": "You are a SQL expert. Always respond with only a SQL SELECT query inside ```sql ``` code blocks."},
-            {"role": "user", "content": prompt}
-        ],
-        temperature=0.1,
-        max_tokens=1000,
-    )
+    try:
+        sql_response = ollama.chat(
+            model=model_name,
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are a SQL expert. Always respond with only a SQL SELECT query inside ```sql ``` code blocks. Never write explanations.",
+                },
+                {"role": "user", "content": prompt},
+            ],
+        )
 
-    raw_sql = sql_response.choices[0].message.content
-    sql = extract_sql(raw_sql)
+        raw_sql = sql_response.get("message", {}).get("content", "")
+        sql = extract_sql(raw_sql)
+        if not sql:
+            raise ValueError("No SQL was generated")
 
-    summary_response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=[
-            {"role": "user", "content": f'Write a 1-2 sentence plain English business summary. Question: "{question}". SQL: {sql}. Be concise.'}
-        ],
-        temperature=0.3,
-        max_tokens=200,
-    )
+        summary_response = ollama.chat(
+            model=model_name,
+            messages=[
+                {
+                    "role": "user",
+                    "content": f'Write a 1-2 sentence plain English business summary. Question: "{question}". SQL: {sql}. Be concise and business-focused.',
+                }
+            ],
+        )
 
-    summary = summary_response.choices[0].message.content.strip()
+        summary = summary_response.get("message", {}).get("content", "").strip()
 
-    return {
-        "sql": sql,
-        "summary": summary,
-        "model": "llama-3.3-70b-versatile"
-    }
+        return {
+            "sql": sql,
+            "summary": summary,
+            "model": model_name,
+        }
+
+    except Exception as exc:
+        raise Exception(f"Ollama error: {str(exc)}")

@@ -15,12 +15,24 @@ const encrypt = (text) => {
 }
 
 const decrypt = (text) => {
-  const key = Buffer.from(ENCRYPTION_KEY.padEnd(32).slice(0, 32))
-  const [ivHex, encryptedHex] = text.split(':')
-  const iv = Buffer.from(ivHex, 'hex')
-  const encrypted = Buffer.from(encryptedHex, 'hex')
-  const decipher = crypto.createDecipheriv(ALGORITHM, key, iv)
-  return Buffer.concat([decipher.update(encrypted), decipher.final()]).toString()
+  if (!text || typeof text !== 'string') {
+    return ''
+  }
+
+  if (!text.includes(':')) {
+    return text
+  }
+
+  try {
+    const key = Buffer.from(ENCRYPTION_KEY.padEnd(32).slice(0, 32))
+    const [ivHex, encryptedHex] = text.split(':')
+    const iv = Buffer.from(ivHex, 'hex')
+    const encrypted = Buffer.from(encryptedHex, 'hex')
+    const decipher = crypto.createDecipheriv(ALGORITHM, key, iv)
+    return Buffer.concat([decipher.update(encrypted), decipher.final()]).toString()
+  } catch (error) {
+    return text
+  }
 }
 
 // ─── Get All Connections ──────────────────────────────────────────────────────
